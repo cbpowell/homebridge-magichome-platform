@@ -17,6 +17,8 @@ const LightBulb = class extends Accessory {
     this.setup = config.setup || 'RGBW'
     this.color = { H: 0, S: 0, L: 100 }
     this.purewhite = config.purewhite || false
+    this.singleChannel = config.singleChannel || false; 
+    
     this.timeout = config.timeout != null ? config.timeout : 60000
     setTimeout(() => {
       this.updateState()
@@ -31,16 +33,17 @@ const LightBulb = class extends Accessory {
       .on('get', this.getPowerState.bind(this))
       .on('set', this.setPowerState.bind(this))
 
-    lightbulbService
-      .addCharacteristic(new this.homebridge.Characteristic.Hue())
-      .on('get', this.getHue.bind(this))
-      .on('set', this.setHue.bind(this))
+    if (this.singleChannel == false) {
+      lightbulbService
+        .addCharacteristic(new this.homebridge.Characteristic.Hue())
+        .on('get', this.getHue.bind(this))
+        .on('set', this.setHue.bind(this))
 
-    lightbulbService
-      .addCharacteristic(new this.homebridge.Characteristic.Saturation())
-      .on('get', this.getSaturation.bind(this))
-      .on('set', this.setSaturation.bind(this))
-
+      lightbulbService
+        .addCharacteristic(new this.homebridge.Characteristic.Saturation())
+        .on('get', this.getSaturation.bind(this))
+        .on('set', this.setSaturation.bind(this))
+    }
     lightbulbService
       .addCharacteristic(new this.homebridge.Characteristic.Brightness())
       .on('get', this.getBrightness.bind(this))
@@ -84,12 +87,16 @@ const LightBulb = class extends Accessory {
       self.services[0]
         .getCharacteristic(this.homebridge.Characteristic.On)
         .updateValue(self.isOn)
-      self.services[0]
-        .getCharacteristic(this.homebridge.Characteristic.Hue)
-        .updateValue(self.color.H)
-      self.services[0]
-        .getCharacteristic(this.homebridge.Characteristic.Saturation)
-        .updateValue(self.color.S)
+      
+      if (this.singleChannel == false) {
+        self.services[0]
+          .getCharacteristic(this.homebridge.Characteristic.Hue)
+          .updateValue(self.color.H)
+        self.services[0]
+          .getCharacteristic(this.homebridge.Characteristic.Saturation)
+          .updateValue(self.color.S)
+      }
+      
       self.services[0]
         .getCharacteristic(this.homebridge.Characteristic.Brightness)
         .updateValue(self.color.L)
