@@ -1,5 +1,5 @@
 {
-  "name": "homebridge-magichome-controller",
+  "name": "homebridge-magichome-platform-cbpowell",
   "version": "0.1.0",
   "description": "Homebridge Plugin for MagicHome LED Strips with preset scenes and support for single channel light controllers as well as a fix for the repeated persisting to nvram of other packages. Forked from https://github.com/sahilchaddha/homebridge-magichome-platform",
   "main": "index.js",
